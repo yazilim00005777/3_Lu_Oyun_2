@@ -1,0 +1,1738 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>✨ Çift Eğlence & Flört Dünyası | Ekran Paylaşımı Mini Oyunlar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-dark: #080612;
+      --surface: #130e24;
+      --surface-card: #1c1533;
+      --surface-hover: #271e47;
+      --accent-pink: #ff3b7e;
+      --accent-purple: #9b51e0;
+      --accent-blue: #00c2ff;
+      --accent-gold: #ffbe3b;
+      --accent-green: #00e676;
+      --female-color: #ff4081;
+      --male-color: #00d2ff;
+      --text-main: #f8f5ff;
+      --text-muted: #a395c2;
+      --border-glow: rgba(255, 59, 126, 0.25);
+      --card-radius: 20px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .ambient-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background: 
+        radial-gradient(circle at 15% 15%, rgba(255, 59, 126, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(155, 81, 224, 0.14) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(0, 194, 255, 0.06) 0%, transparent 60%);
+    }
+
+    .particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .particle {
+      position: absolute;
+      animation: floatUp linear infinite;
+      opacity: 0;
+      user-select: none;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(105vh) scale(0.6) rotate(0deg); opacity: 0; }
+      15% { opacity: 0.3; }
+      85% { opacity: 0.2; }
+      100% { transform: translateY(-10vh) scale(1.1) rotate(360deg); opacity: 0; }
+    }
+
+    .app-container {
+      position: relative;
+      z-index: 1;
+      max-width: 960px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 16px 14px 40px;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Top Navigation Hub (3 Games) */
+    .game-nav-hub {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+      width: 100%;
+    }
+    .nav-tab-btn {
+      background: var(--surface);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 12px 6px;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      touch-action: manipulation;
+      user-select: none;
+    }
+    .nav-tab-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .nav-tab-btn:hover {
+      border-color: var(--accent-pink);
+      transform: translateY(-2px);
+      color: var(--text-main);
+    }
+    .nav-tab-btn.active {
+      background: var(--surface-card);
+      border-color: var(--accent-pink);
+      box-shadow: 0 0 20px rgba(255, 59, 126, 0.35);
+      color: #fff;
+    }
+    .nav-tab-btn.active::before { opacity: 0.15; }
+    .nav-tab-btn .tab-icon { font-size: 1.5rem; z-index: 1; line-height: 1; }
+    .nav-tab-btn .tab-title { font-size: 0.85rem; font-weight: 700; z-index: 1; white-space: nowrap; }
+    .nav-tab-btn .tab-sub { font-size: 0.66rem; color: var(--text-muted); z-index: 1; }
+    .nav-tab-btn.active .tab-sub { color: #ffb8d9; }
+
+    /* Players Setup Bar (Compact & Responsive) */
+    .players-config {
+      padding: 10px 14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 16px;
+      border-radius: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border-glow);
+    }
+    .player-card {
+      background: var(--surface-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .player-card.female { border-left: 4px solid var(--female-color); }
+    .player-card.male { border-left: 4px solid var(--male-color); }
+    .player-avatar { font-size: 1.6rem; line-height: 1; flex-shrink: 0; }
+    .player-inputs { flex: 1; min-width: 0; }
+    .player-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; }
+    .player-input {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 700;
+      width: 100%;
+      outline: none;
+      padding: 2px 0;
+      transition: border-color 0.2s;
+    }
+    .player-input:focus {
+      border-bottom-color: var(--accent-pink);
+    }
+
+    /* Panels Base */
+    .game-panel {
+      display: none;
+      animation: tabFadeIn 0.35s ease;
+    }
+    .game-panel.active-panel { display: block; }
+    @keyframes tabFadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border-glow);
+      border-radius: var(--card-radius);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(12px);
+    }
+
+    /* Common Button Styles */
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+      border: none;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-weight: 800;
+      font-size: 0.92rem;
+      cursor: pointer;
+      box-shadow: 0 4px 18px rgba(255, 59, 126, 0.35);
+      transition: all 0.25s;
+      touch-action: manipulation;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(255, 59, 126, 0.5); }
+
+    .btn-gold {
+      background: linear-gradient(135deg, #ffd700, #ff8c00);
+      border: none;
+      color: #150921;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-weight: 800;
+      font-size: 0.92rem;
+      cursor: pointer;
+      box-shadow: 0 4px 18px rgba(255, 215, 0, 0.4);
+      transition: all 0.25s;
+      touch-action: manipulation;
+    }
+    .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(255, 215, 0, 0.6); }
+
+    /* ========================================================
+       GAME 1: AŞK MAYINLARI (MINESWEEPER GÖREV OYUNU & DÜELLO)
+       ======================================================== */
+    .mine-container {
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+    .mine-header-area {
+      margin-bottom: 14px;
+      max-width: 650px;
+    }
+    .mine-header-title {
+      font-size: clamp(1.3rem, 4vw, 1.7rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff, #ff85b8, var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 4px;
+    }
+    .mine-header-sub {
+      font-size: clamp(0.76rem, 2.5vw, 0.85rem);
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    /* Scoreboard */
+    .mine-scoreboard-grid {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 10px;
+      align-items: center;
+      width: 100%;
+      max-width: 620px;
+      margin-bottom: 12px;
+    }
+    .mine-player-card {
+      background: var(--surface-card);
+      border: 2px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      position: relative;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .mine-player-card.female-card { border-top: 4px solid var(--female-color); }
+    .mine-player-card.male-card { border-top: 4px solid var(--male-color); }
+    .mine-player-card.turn-active {
+      transform: translateY(-2px) scale(1.02);
+      border-color: var(--accent-gold);
+    }
+    .mine-player-card.female-card.turn-active {
+      border-color: var(--female-color);
+      box-shadow: 0 6px 25px rgba(255, 64, 129, 0.4);
+    }
+    .mine-player-card.male-card.turn-active {
+      border-color: var(--male-color);
+      box-shadow: 0 6px 25px rgba(0, 210, 255, 0.4);
+    }
+    .mine-p-avatar-wrap {
+      position: relative;
+      display: inline-flex;
+    }
+    .mine-p-avatar {
+      font-size: 1.8rem;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid rgba(255, 255, 255, 0.12);
+      transition: transform 0.3s;
+    }
+    .turn-active .mine-p-avatar {
+      animation: pulseAvatar 1.4s infinite alternate;
+      border-color: #fff;
+    }
+    @keyframes pulseAvatar {
+      0% { transform: scale(1); box-shadow: 0 0 8px rgba(255, 255, 255, 0.2); }
+      100% { transform: scale(1.08); box-shadow: 0 0 16px rgba(255, 190, 59, 0.6); }
+    }
+    .turn-badge-pill {
+      display: none;
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #ffd700, #ff8c00);
+      color: #150921;
+      font-size: 0.58rem;
+      font-weight: 900;
+      padding: 2px 7px;
+      border-radius: 20px;
+      white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      animation: pulseBadge 1.2s infinite;
+    }
+    .turn-active .turn-badge-pill { display: block; }
+    @keyframes pulseBadge {
+      0%, 100% { transform: translateX(-50%) scale(1); }
+      50% { transform: translateX(-50%) scale(1.06); }
+    }
+    .mine-p-name {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-main);
+      max-width: 110px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .female-card .mine-p-name { color: var(--female-color); }
+    .male-card .mine-p-name { color: var(--male-color); }
+    
+    .mine-p-score {
+      font-size: 1.7rem;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1;
+      display: flex;
+      align-items: baseline;
+      gap: 3px;
+    }
+    .mine-p-score-sub {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .mine-p-stats-row {
+      display: flex;
+      gap: 6px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: rgba(0,0,0,0.25);
+      padding: 3px 8px;
+      border-radius: 20px;
+    }
+
+    /* Scoreboard Center VS */
+    .mine-vs-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .mine-vs-badge {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: var(--accent-gold);
+      text-shadow: 0 0 10px rgba(255, 190, 59, 0.4);
+      background: rgba(255, 190, 59, 0.1);
+      border: 1px solid rgba(255, 190, 59, 0.3);
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .mine-starter-toggle-sm {
+      display: flex;
+      background: var(--surface-card);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 2px;
+    }
+    .mine-starter-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 3px 7px;
+      border-radius: 14px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mine-starter-btn.active {
+      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+      color: white;
+      box-shadow: 0 2px 8px rgba(255, 59, 126, 0.4);
+    }
+
+    /* Remaining Items Bar */
+    .mine-counts-bar {
+      display: flex;
+      justify-content: center;
+      gap: 8px 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .mine-count-pill {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      white-space: nowrap;
+    }
+    .mine-count-val { font-weight: 800; color: #fff; }
+
+    /* Grid Area */
+    .mine-grid-wrapper {
+      position: relative;
+      margin-bottom: 14px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+    .mine-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      max-width: 420px;
+      width: 100%;
+      margin: 0 auto;
+      transition: transform 0.2s;
+    }
+    .mine-grid.grid-shake {
+      animation: shakeGrid 0.4s ease-in-out;
+    }
+    @keyframes shakeGrid {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+
+    .mine-cell {
+      aspect-ratio: 1;
+      background: var(--surface-card);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(1.3rem, 4vw, 1.7rem);
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      user-select: none;
+      position: relative;
+      touch-action: manipulation;
+    }
+    .mine-cell:hover {
+      border-color: var(--accent-pink);
+      transform: scale(1.05);
+      background: var(--surface-hover);
+      box-shadow: 0 0 15px rgba(255, 59, 126, 0.3);
+    }
+    .mine-cell.revealed {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: none;
+      cursor: default;
+    }
+    .mine-cell.is-bomb {
+      background: rgba(255, 59, 126, 0.25);
+      border-color: var(--accent-pink);
+      box-shadow: 0 0 20px rgba(255, 59, 126, 0.5);
+      animation: bombPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .mine-cell.is-heart {
+      background: rgba(0, 230, 118, 0.2);
+      border-color: var(--accent-green);
+      box-shadow: 0 0 15px rgba(0, 230, 118, 0.3);
+      animation: heartPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .mine-cell.is-star {
+      background: rgba(255, 215, 0, 0.2);
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+      animation: starPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes heartPop { 0% { transform: scale(0.6); } 70% { transform: scale(1.2); } 100% { transform: scale(1); } }
+    @keyframes starPop { 0% { transform: scale(0.6); } 70% { transform: scale(1.2); } 100% { transform: scale(1); } }
+    @keyframes bombPop { 0% { transform: scale(0.6); } 50% { transform: scale(1.25) rotate(10deg); } 100% { transform: scale(1) rotate(0deg); } }
+
+    /* Flying Score Popup */
+    .flying-point {
+      position: absolute;
+      pointer-events: none;
+      font-size: 1.2rem;
+      font-weight: 900;
+      z-index: 100;
+      animation: flyUpAndFade 1s forwards ease-out;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+    }
+    @keyframes flyUpAndFade {
+      0% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -50px) scale(1.3); }
+    }
+
+    /* Event Notification Card */
+    .mine-event-card {
+      background: var(--surface-card);
+      border: 2px solid var(--accent-pink);
+      border-radius: 16px;
+      padding: 14px 18px;
+      max-width: 540px;
+      width: 100%;
+      min-height: 75px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      transition: all 0.3s;
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.35);
+    }
+    .mine-event-card.event-bomb {
+      border-color: #ff3b7e;
+      background: linear-gradient(135deg, rgba(255, 59, 126, 0.18), var(--surface-card));
+      box-shadow: 0 0 25px rgba(255, 59, 126, 0.35);
+    }
+    .mine-event-card.event-heart {
+      border-color: #00e676;
+      background: linear-gradient(135deg, rgba(0, 230, 118, 0.15), var(--surface-card));
+      box-shadow: 0 0 25px rgba(0, 230, 118, 0.35);
+    }
+    .mine-event-card.event-star {
+      border-color: #ffd700;
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), var(--surface-card));
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.35);
+    }
+    .mine-event-card.event-winner {
+      border-color: #ffd700;
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.22), rgba(255, 59, 126, 0.22));
+      box-shadow: 0 0 35px rgba(255, 215, 0, 0.45);
+    }
+
+    /* ========================================================
+       GAME 2: ÇİFT TELEPATİSİ (UYUMLULUK TESTİ - 25 SORU)
+       ======================================================== */
+    .quiz-container {
+      padding: 22px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .quiz-header-title {
+      font-size: clamp(1.3rem, 4vw, 1.7rem);
+      font-weight: 800;
+      color: var(--accent-purple);
+      margin-bottom: 4px;
+    }
+    .quiz-header-sub {
+      font-size: clamp(0.76rem, 2.5vw, 0.86rem);
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      max-width: 540px;
+    }
+    .quiz-card {
+      background: var(--surface-card);
+      border: 1.5px solid rgba(255, 59, 126, 0.35);
+      border-radius: 18px;
+      padding: 20px 16px;
+      max-width: 580px;
+      width: 100%;
+      margin: 10px 0 18px;
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.35);
+    }
+    .quiz-q-num {
+      font-size: 0.78rem;
+      color: var(--accent-gold);
+      font-weight: 800;
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+    .quiz-q-title {
+      font-size: clamp(1.05rem, 3.2vw, 1.25rem);
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 18px;
+      line-height: 1.45;
+    }
+    .quiz-opts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .quiz-opt-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1.5px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      padding: 12px 10px;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s;
+      line-height: 1.35;
+      touch-action: manipulation;
+    }
+    .quiz-opt-btn:hover {
+      background: var(--surface-hover);
+      border-color: var(--accent-pink);
+      transform: translateY(-2px);
+    }
+    .quiz-opt-btn.chosen {
+      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+      border-color: #fff;
+      box-shadow: 0 0 15px rgba(255, 59, 126, 0.4);
+      color: #fff;
+    }
+
+    /* ========================================================
+       GAME 3: HANGİSİNİ SEÇERDİN? (KADEMELİ - 25 SEÇENEK)
+       ======================================================== */
+    .wyr-container {
+      padding: 22px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .wyr-header-title {
+      font-size: clamp(1.3rem, 4vw, 1.7rem);
+      font-weight: 800;
+      color: var(--accent-pink);
+      margin-bottom: 4px;
+    }
+    .wyr-header-sub {
+      font-size: clamp(0.76rem, 2.5vw, 0.86rem);
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      max-width: 540px;
+    }
+    .wyr-level-tag {
+      background: rgba(0, 194, 255, 0.15);
+      border: 1px solid var(--accent-blue);
+      color: var(--accent-blue);
+      padding: 4px 14px;
+      border-radius: 30px;
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .wyr-vs-box {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 14px;
+      align-items: center;
+      max-width: 660px;
+      width: 100%;
+      margin: 12px 0 20px;
+    }
+    .wyr-card {
+      background: var(--surface-card);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 18px;
+      padding: 20px 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+      min-height: 140px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      touch-action: manipulation;
+    }
+    .wyr-card:hover {
+      border-color: var(--accent-pink);
+      transform: scale(1.02);
+      box-shadow: 0 0 20px rgba(255, 59, 126, 0.3);
+    }
+    .wyr-card.selected {
+      background: linear-gradient(135deg, rgba(255, 59, 126, 0.25), rgba(155, 81, 224, 0.25));
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 25px rgba(255, 190, 59, 0.4);
+    }
+    .wyr-opt-badge {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--accent-pink);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .wyr-opt-text {
+      font-size: clamp(0.92rem, 2.8vw, 1.02rem);
+      font-weight: 700;
+      line-height: 1.45;
+      color: var(--text-main);
+    }
+    .wyr-vs-divider {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: var(--accent-gold);
+      text-shadow: 0 0 10px rgba(255, 190, 59, 0.5);
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: linear-gradient(135deg, #180c26, #2a1138);
+      border: 1px solid var(--accent-pink);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      z-index: 1000;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      max-width: 90vw;
+      text-align: center;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    #confettiCanvas { position: fixed; inset: 0; pointer-events: none; z-index: 999; }
+
+    /* ========================================================
+       RESPONSIVE MOBILE STYLES (Akıllı Telefon Uyumlu)
+       ======================================================== */
+    @media (max-width: 680px) {
+      .app-container {
+        padding: 10px 8px 30px;
+      }
+      .game-nav-hub {
+        gap: 6px;
+        margin-bottom: 10px;
+      }
+      .nav-tab-btn {
+        padding: 8px 4px;
+        border-radius: 12px;
+      }
+      .nav-tab-btn .tab-icon {
+        font-size: 1.3rem;
+      }
+      .nav-tab-btn .tab-title {
+        font-size: 0.75rem;
+      }
+      .nav-tab-btn .tab-sub {
+        font-size: 0.58rem;
+        display: none; /* Hide subtitle on small phones for ultra-clean fit */
+      }
+      .players-config {
+        padding: 8px 10px;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+      .player-card {
+        padding: 6px 8px;
+        gap: 6px;
+      }
+      .player-avatar {
+        font-size: 1.3rem;
+      }
+      .player-label {
+        font-size: 0.6rem;
+      }
+      .player-input {
+        font-size: 0.85rem;
+      }
+      
+      /* Mines Mobile */
+      .mine-container {
+        padding: 14px 10px;
+      }
+      .mine-scoreboard-grid {
+        gap: 6px;
+        margin-bottom: 10px;
+      }
+      .mine-player-card {
+        padding: 8px 6px;
+        border-radius: 12px;
+      }
+      .mine-p-avatar {
+        width: 36px;
+        height: 36px;
+        font-size: 1.4rem;
+      }
+      .mine-p-name {
+        font-size: 0.82rem;
+        max-width: 80px;
+      }
+      .mine-p-score {
+        font-size: 1.35rem;
+      }
+      .mine-p-stats-row {
+        gap: 4px;
+        font-size: 0.62rem;
+        padding: 2px 6px;
+      }
+      .mine-vs-badge {
+        width: 28px;
+        height: 28px;
+        font-size: 0.9rem;
+      }
+      .mine-starter-btn {
+        padding: 2px 5px;
+        font-size: 0.6rem;
+      }
+      .mine-counts-bar {
+        gap: 4px 8px;
+        padding: 5px 8px;
+        font-size: 0.7rem;
+        margin-bottom: 10px;
+      }
+      .mine-grid {
+        max-width: 330px;
+        gap: 6px;
+      }
+      .mine-cell {
+        border-radius: 10px;
+        font-size: 1.3rem;
+      }
+      .mine-event-card {
+        padding: 10px 12px;
+        min-height: 60px;
+      }
+
+      /* Quiz Mobile */
+      .quiz-container {
+        padding: 16px 10px;
+      }
+      .quiz-card {
+        padding: 14px 10px;
+        margin: 8px 0 14px;
+      }
+      .quiz-opts-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      .quiz-opt-btn {
+        padding: 12px 10px;
+        font-size: 0.88rem;
+      }
+      .quiz-container .btn-primary {
+        width: 100%;
+        max-width: 300px;
+      }
+
+      /* WYR Mobile */
+      .wyr-container {
+        padding: 16px 10px;
+      }
+      .wyr-vs-box {
+        grid-template-columns: 1fr;
+        gap: 6px;
+        margin: 8px 0 14px;
+      }
+      .wyr-card {
+        min-height: 80px;
+        padding: 12px 10px;
+        border-radius: 14px;
+      }
+      .wyr-vs-divider {
+        font-size: 1.2rem;
+        margin: -2px 0;
+      }
+      .wyr-container .btn-gold {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="confettiCanvas"></canvas>
+<div class="ambient-bg"></div>
+<div class="particles" id="particleContainer"></div>
+
+<div class="app-container">
+  <!-- 3 Mini Games Navigation Bar -->
+  <div class="game-nav-hub">
+    <button class="nav-tab-btn active" onclick="switchGameTab('mines')" id="tab-mines">
+      <span class="tab-icon">💣</span>
+      <span class="tab-title">Aşk Mayınları</span>
+      <span class="tab-sub">Sürpriz Görevler</span>
+    </button>
+    <button class="nav-tab-btn" onclick="switchGameTab('quiz')" id="tab-quiz">
+      <span class="tab-icon">🧠</span>
+      <span class="tab-title">Çift Telepatisi</span>
+      <span class="tab-sub">Aynı Anda Tahmin</span>
+    </button>
+    <button class="nav-tab-btn" onclick="switchGameTab('wyr')" id="tab-wyr">
+      <span class="tab-icon">⚡</span>
+      <span class="tab-title">Hangisi? (Kademeli)</span>
+      <span class="tab-sub">Tatlıdan Sıcağa</span>
+    </button>
+  </div>
+
+  <!-- Players Config Bar (Meryem & Sabri) -->
+  <div class="panel players-config">
+    <div class="player-card female">
+      <div class="player-avatar">👩</div>
+      <div class="player-inputs">
+        <div class="player-label">Kadın Oyuncu</div>
+        <input type="text" id="femaleName" class="player-input" value="Meryem" placeholder="Meryem" oninput="onPlayerNamesChanged()" />
+      </div>
+    </div>
+
+    <div class="player-card male">
+      <div class="player-avatar">🧑</div>
+      <div class="player-inputs">
+        <div class="player-label">Erkek Oyuncu</div>
+        <input type="text" id="maleName" class="player-input" value="Sabri" placeholder="Sabri" oninput="onPlayerNamesChanged()" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       PANEL 1: AŞK MAYINLARI (MINESWEEPER GÖREV OYUNU & DÜELLO)
+       ======================================================== -->
+  <div class="game-panel active-panel" id="panel-mines">
+    <div class="panel mine-container">
+      <div class="mine-header-area">
+        <h2 class="mine-header-title">💣 Aşk Mayınları Düellosu</h2>
+        <p class="mine-header-sub">Sırayla kutu açarak puanları toplayın! 💖 Kalpler (+10), ⭐ Yıldızlar (+5) kazandırır; 💣 Mayın patlarsa eğlenceli ceza görevi gelir ve oyun devam eder! Tüm kutular açılınca en çok puanı toplayan kazanır!</p>
+      </div>
+
+      <!-- Kadın vs Erkek Canlı Skor Tablosu -->
+      <div class="mine-scoreboard-grid">
+        <!-- Female Player Card -->
+        <div class="mine-player-card female-card turn-active" id="mineCardFemale">
+          <div class="mine-p-avatar-wrap">
+            <div class="mine-p-avatar">👩</div>
+            <div class="turn-badge-pill" id="mineBadgeFemale">🎯 SIRADA</div>
+          </div>
+          <div class="mine-p-name" id="mineNameFemale">Meryem</div>
+          <div class="mine-p-score">
+            <span id="mineScoreFemale">0</span>
+            <span class="mine-p-score-sub">Puan</span>
+          </div>
+          <div class="mine-p-stats-row">
+            <span>💖 <b id="mineHeartsFemale">0</b></span>
+            <span>⭐ <b id="mineStarsFemale">0</b></span>
+            <span>💣 <b id="mineBombsFemale">0</b></span>
+          </div>
+        </div>
+
+        <!-- Center VS & Starter Toggle -->
+        <div class="mine-vs-center">
+          <div class="mine-vs-badge">VS</div>
+          <div class="mine-starter-toggle-sm">
+            <button class="mine-starter-btn active" id="mineStarterFemaleBtn" onclick="setMineStarter('female')">👩 Kadın</button>
+            <button class="mine-starter-btn" id="mineStarterMaleBtn" onclick="setMineStarter('male')">🧑 Erkek</button>
+          </div>
+        </div>
+
+        <!-- Male Player Card -->
+        <div class="mine-player-card male-card" id="mineCardMale">
+          <div class="mine-p-avatar-wrap">
+            <div class="mine-p-avatar">🧑</div>
+            <div class="turn-badge-pill" id="mineBadgeMale">🎯 SIRADA</div>
+          </div>
+          <div class="mine-p-name" id="mineNameMale">Sabri</div>
+          <div class="mine-p-score">
+            <span id="mineScoreMale">0</span>
+            <span class="mine-p-score-sub">Puan</span>
+          </div>
+          <div class="mine-p-stats-row">
+            <span>💖 <b id="mineHeartsMale">0</b></span>
+            <span>⭐ <b id="mineStarsMale">0</b></span>
+            <span>💣 <b id="mineBombsMale">0</b></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kalan Ögeler ve Sıra Bilgisi -->
+      <div class="mine-counts-bar">
+        <div class="mine-count-pill">💖 Kalan Kalp: <span class="mine-count-val" id="mineHeartCount" style="color:var(--accent-green);">12</span>/12</div>
+        <div class="mine-count-pill">⭐ Kalan Yıldız: <span class="mine-count-val" id="mineStarCount" style="color:var(--accent-gold);">4</span>/4</div>
+        <div class="mine-count-pill">💣 Kalan Mayın: <span class="mine-count-val" id="mineBombCount" style="color:var(--accent-pink);">4</span>/4</div>
+        <div class="mine-count-pill">📦 Kalan Kutu: <span class="mine-count-val" id="mineRemainingCount" style="color:var(--accent-blue);">20</span>/20</div>
+        <div class="mine-count-pill">🎯 Sıra: <span class="mine-count-val" id="mineCurrentTurnText" style="color:var(--accent-gold);">Meryem</span></div>
+      </div>
+
+      <!-- Mayın Tarlası Grid Alanı -->
+      <div class="mine-grid-wrapper" id="mineGridWrapper">
+        <div class="mine-grid" id="mineGrid"></div>
+      </div>
+
+      <!-- Görev & Olay Bildirim Kartı -->
+      <div class="mine-event-card" id="mineEventCard">
+        <div style="font-size:0.82rem;color:var(--accent-gold);font-weight:800;letter-spacing:1px;text-transform:uppercase;" id="mineEventTitle">KUTULARDAN BİRİNİ SEÇİN!</div>
+        <div style="font-size:0.92rem;color:var(--text-main);margin-top:5px;line-height:1.45;" id="mineEventDesc">Ekran paylaşımında partnerinize hangi kutuyu açmak istediğinizi söyleyin veya dokunun!</div>
+      </div>
+
+      <!-- Kontroller -->
+      <div style="margin-top:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;width:100%;">
+        <button class="btn-gold" onclick="initMinesGame()">🔄 Tahtayı Sıfırla & Yeni Oyun</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       PANEL 2: ÇİFT TELEPATİSİ (UYUMLULUK TESTİ - 25 SORU)
+       ======================================================== -->
+  <div class="game-panel" id="panel-quiz">
+    <div class="panel quiz-container">
+      <h2 class="quiz-header-title">🧠 Çift Telepatisi & Zihin Okuma</h2>
+      <p class="quiz-header-sub">Ekranda soru çıkar. 1-2-3 deyip aynı anda cevabınızı söyleyin; zihinleriniz ne kadar uyumlu?</p>
+
+      <div class="quiz-card">
+        <div class="quiz-q-num" id="quizQNum">SORU 1 / 25</div>
+        <div class="quiz-q-title" id="quizQTitle">İlk yüz yüze buluştuğumuzda yapacağımız ilk şey ne olmalı?</div>
+        <div class="quiz-opts-grid" id="quizOptsGrid"></div>
+      </div>
+
+      <button class="btn-primary" onclick="nextTelepathyQuestion()">⚡ Sıradaki Soruya Geç</button>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       PANEL 3: HANGİSİNİ SEÇERDİN? (KADEMELİ - 25 SEÇENEK)
+       ======================================================== -->
+  <div class="game-panel" id="panel-wyr">
+    <div class="panel wyr-container">
+      <h2 class="wyr-header-title">⚡ Hangisini Tercih Ederdin?</h2>
+      <p class="wyr-header-sub">Seviye seviye ilerler: Komik/Tatlı ikilemlerden başlar, yavaşça flört ve tatlı fantezilere geçer!</p>
+
+      <div class="wyr-level-tag" id="wyrLevelTag">SEVİYE 1: TATLI & EĞLENCELİ (1/25)</div>
+
+      <div class="wyr-vs-box">
+        <div class="wyr-card" id="wyrCardA" onclick="selectWyr('A')">
+          <div class="wyr-opt-badge">SEÇENEK A</div>
+          <div class="wyr-opt-text" id="wyrTextA">Partnerinin senin için yatakta özel kahvaltı hazırlaması</div>
+        </div>
+        <div class="wyr-vs-divider">VS</div>
+        <div class="wyr-card" id="wyrCardB" onclick="selectWyr('B')">
+          <div class="wyr-opt-badge">SEÇENEK B</div>
+          <div class="wyr-opt-text" id="wyrTextB">Partnerinin sana yorucu bir günün sonunda masaj yapması</div>
+        </div>
+      </div>
+
+      <button class="btn-gold" onclick="drawNextWyr()">🎲 Yeni İkili Çek (Seviyeyi İlerlet)</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Bildirim mesajı</div>
+
+<script>
+// ==========================================
+// 1. AUDIO SYNTHESIZER
+// ==========================================
+let audioCtx = null;
+function initAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+}
+function playTone(freq, type = 'sine', duration = 0.2, gainVal = 0.12) {
+  try {
+    initAudio();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    gain.gain.setValueAtTime(gainVal, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
+  } catch(e) {}
+}
+function playClickSound() { playTone(540, 'sine', 0.15, 0.1); }
+function playClimaxSound() {
+  [440, 554.37, 659.25, 880].forEach((f, i) => {
+    setTimeout(() => playTone(f, 'triangle', 0.45, 0.18), i * 130);
+  });
+}
+
+// ==========================================
+// 2. TAB SWITCHER
+// ==========================================
+function switchGameTab(tabName) {
+  playClickSound();
+  document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.game-panel').forEach(p => p.classList.remove('active-panel'));
+
+  const tabBtn = document.getElementById(`tab-${tabName}`);
+  const panel = document.getElementById(`panel-${tabName}`);
+  if (tabBtn) tabBtn.classList.add('active');
+  if (panel) panel.classList.add('active-panel');
+
+  if (tabName === 'mines' && mineCells.length === 0) initMinesGame();
+  if (tabName === 'quiz') loadTelepathyQuestion();
+  if (tabName === 'wyr') initWyrGame();
+}
+
+// ==========================================
+// 3. PLAYER CONFIG HELPERS
+// ==========================================
+function getFemaleName() {
+  const el = document.getElementById('femaleName');
+  return (el && el.value.trim()) ? el.value.trim() : 'Meryem';
+}
+
+function getMaleName() {
+  const el = document.getElementById('maleName');
+  return (el && el.value.trim()) ? el.value.trim() : 'Sabri';
+}
+
+function onPlayerNamesChanged() {
+  updateMineUI();
+}
+
+// ==========================================
+// 4. GAME 1: AŞK MAYINLARI DÜELLOSU
+// ==========================================
+let mineCells = [];
+let mineTurn = 'female'; // 'female' or 'male'
+let mineStats = {
+  female: { score: 0, hearts: 0, stars: 0, bombs: 0 },
+  male: { score: 0, hearts: 0, stars: 0, bombs: 0 }
+};
+let mineHeartsLeft = 12;
+let mineStarsLeft = 4;
+let mineBombsLeft = 4;
+let mineGameOver = false;
+
+const MINE_DARES = [
+  '💣 MAYIN PATLADI! Ceza: Partnerine 15 saniye boyunca mikrofonda en tatlı ve en samimi iltifatını yap!',
+  '💣 MAYIN PATLADI! Ceza: Partnerinin istediği bir şarkının nakaratını mikrofonda mırıldan veya söyle!',
+  '💣 MAYIN PATLADI! Ceza: Kamerada 10 saniye boyunca en sevimli ve komik mimiklerini sergile!',
+  '💣 MAYIN PATLADI! Ceza: Partnerine "Senin en çok şu özelliğine bayılıyorum..." diyerek içten bir itirafta bulun!',
+  '💣 MAYIN PATLADI! Ceza: 10 saniye boyunca kameraya yaklaşıp partnerinin gözlerine kırpmadan bak!',
+  '💣 MAYIN PATLADI! Ceza: Telefonundaki en son çektiğin fotoğrafı partnerine göster veya ne olduğunu anlat!',
+  '💣 MAYIN PATLADI! Ceza: Partnerine mikrofonda en çekici fısıltılı ses tonunla bir aşk cümlesi söyle!',
+  '💣 MAYIN PATLADI! Ceza: Partnerinin sana soracağı herhangi 1 soruya tamamen dürüstçe cevap ver!',
+  '💣 MAYIN PATLADI! Ceza: Partnerinin tarzında veya gülüşünde en çok sevdiğin 3 detayı say!',
+  '💣 MAYIN PATLADI! Ceza: Ekrandan partnerine tatlı bir öpücük gönder ve bir sonraki buluşma hayalini anlat!',
+  '💣 MAYIN PATLADI! Ceza: 15 saniye boyunca partnerine küçük romantik bir mani uydur!',
+  '💣 MAYIN PATLADI! Ceza: "İlk tanıştığımız gün aklımdan geçen ilk şey şuydu..." diyerek gerçeği itiraf et!'
+];
+
+function setMineStarter(gender) {
+  mineTurn = gender;
+  updateMineUI();
+  const name = (gender === 'female') ? getFemaleName() : getMaleName();
+  showToast(`🎯 Sıra ${name} oyuncusuna geçti!`);
+}
+
+function initMinesGame() {
+  const grid = document.getElementById('mineGrid');
+  grid.innerHTML = '';
+  grid.classList.remove('grid-shake');
+  mineCells = [];
+  mineStats = {
+    female: { score: 0, hearts: 0, stars: 0, bombs: 0 },
+    male: { score: 0, hearts: 0, stars: 0, bombs: 0 }
+  };
+  mineHeartsLeft = 12;
+  mineStarsLeft = 4;
+  mineBombsLeft = 4;
+  mineGameOver = false;
+  mineTurn = 'female';
+  updateMineUI();
+
+  // 20 Total Cells: 12 Hearts, 4 Stars, 4 Bombs
+  const types = [
+    'bomb','bomb','bomb','bomb',
+    'heart','heart','heart','heart','heart','heart','heart','heart','heart','heart','heart','heart',
+    'star','star','star','star'
+  ].sort(() => Math.random() - 0.5);
+
+  for (let i = 0; i < 20; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'mine-cell';
+    cell.textContent = '❓';
+    cell.dataset.type = types[i];
+    cell.dataset.index = i;
+    cell.onclick = () => clickMineCell(cell);
+    grid.appendChild(cell);
+    mineCells.push(cell);
+  }
+
+  const eventCard = document.getElementById('mineEventCard');
+  eventCard.className = 'mine-event-card';
+  document.getElementById('mineEventTitle').textContent = 'KUTULARDAN BİRİNİ SEÇİN!';
+  document.getElementById('mineEventDesc').textContent = 'Sırayla bir kutuya dokunun; kalpleri ve yıldızları toplayıp puanları kapın! Mayın patlarsa ceza görevi yapılır ve oyun 20 kutunun tümü açılana kadar devam eder!';
+}
+
+function spawnFlyingPoint(cell, text, color = '#ff3b7e') {
+  const wrapper = document.getElementById('mineGridWrapper');
+  const rect = cell.getBoundingClientRect();
+  const wrapperRect = wrapper.getBoundingClientRect();
+
+  const fly = document.createElement('div');
+  fly.className = 'flying-point';
+  fly.textContent = text;
+  fly.style.color = color;
+  fly.style.left = (rect.left - wrapperRect.left + rect.width / 2) + 'px';
+  fly.style.top = (rect.top - wrapperRect.top + rect.height / 2) + 'px';
+
+  wrapper.appendChild(fly);
+  setTimeout(() => fly.remove(), 1000);
+}
+
+function clickMineCell(cell) {
+  if (mineGameOver || cell.classList.contains('revealed')) return;
+
+  const femaleName = getFemaleName();
+  const maleName = getMaleName();
+  const isFemale = (mineTurn === 'female');
+  const activeName = isFemale ? femaleName : maleName;
+  const currentStat = isFemale ? mineStats.female : mineStats.male;
+  const eventCard = document.getElementById('mineEventCard');
+
+  cell.classList.add('revealed');
+  const type = cell.dataset.type;
+
+  if (type === 'heart') {
+    cell.textContent = '💖';
+    cell.classList.add('is-heart');
+    mineHeartsLeft--;
+    currentStat.hearts++;
+    currentStat.score += 10;
+    spawnFlyingPoint(cell, '+10 💖', '#00e676');
+
+    eventCard.className = 'mine-event-card event-heart';
+    document.getElementById('mineEventTitle').textContent = `💖 KALBİ BULDUN! (${activeName} +10 PUAN)`;
+    document.getElementById('mineEventDesc').textContent = `${activeName} sevgi puanını kaptı! Toplam ${currentStat.score} puana ulaştı!`;
+  } else if (type === 'bomb') {
+    cell.textContent = '💣';
+    cell.classList.add('is-bomb');
+    mineBombsLeft--;
+    currentStat.bombs++;
+    
+    // Shake grid
+    const grid = document.getElementById('mineGrid');
+    grid.classList.remove('grid-shake');
+    void grid.offsetWidth;
+    grid.classList.add('grid-shake');
+    spawnFlyingPoint(cell, '💥 BOOM!', '#ff3b7e');
+
+    const dare = MINE_DARES[Math.floor(Math.random() * MINE_DARES.length)];
+    eventCard.className = 'mine-event-card event-bomb';
+    document.getElementById('mineEventTitle').textContent = `💥 BOOM! ${activeName} MAYINA BASTI!`;
+    document.getElementById('mineEventDesc').textContent = dare;
+  } else if (type === 'star') {
+    cell.textContent = '⭐';
+    cell.classList.add('is-star');
+    mineStarsLeft--;
+    currentStat.stars++;
+    currentStat.score += 5;
+    spawnFlyingPoint(cell, '+5 ⭐', '#ffd700');
+
+    eventCard.className = 'mine-event-card event-star';
+    document.getElementById('mineEventTitle').textContent = `⭐ SÜRPRİZ YILDIZ! (${activeName} +5 PUAN)`;
+    document.getElementById('mineEventDesc').textContent = `${activeName}, +5 bonus puan ve karşı tarafa istediğin herhangi 1 tatlı soruyu sorma hakkı kazandın!`;
+  }
+
+  // Switch turn
+  mineTurn = (mineTurn === 'female') ? 'male' : 'female';
+  updateMineUI();
+
+  // Oyun SADECE tüm kutular (20 kartın tamamı) açılınca biter
+  const remainingClickable = mineCells.filter(c => !c.classList.contains('revealed')).length;
+  if (remainingClickable === 0) {
+    mineGameOver = true;
+    playClimaxSound();
+    launchConfetti();
+
+    const fScore = mineStats.female.score;
+    const mScore = mineStats.male.score;
+    let winnerText = '';
+    let winnerDesc = '';
+
+    if (fScore > mScore) {
+      winnerText = `👑 KAZANAN: 👩 ${femaleName} (${fScore} Puan)`;
+      winnerDesc = `Tebrikler ${femaleName}! 20 kutunun tamamı açıldı ve düelloyu ${fScore} puana karşı ${mScore} puanla sen kazandın. ${maleName}'ye dilediğin 1 romantik veya eğlenceli isteğini yaptırabilirsin!`;
+    } else if (mScore > fScore) {
+      winnerText = `👑 KAZANAN: 🧑 ${maleName} (${mScore} Puan)`;
+      winnerDesc = `Tebrikler ${maleName}! 20 kutunun tamamı açıldı ve düelloyu ${mScore} puana karşı ${fScore} puanla sen kazandın. ${femaleName}'ye dilediğin 1 romantik veya eğlenceli isteğini yaptırabilirsin!`;
+    } else {
+      winnerText = `🤝 DOSTLUK & AŞK KAZANDI! (Berabere: ${fScore} - ${mScore})`;
+      winnerDesc = `20 kutunun tamamı açıldı ve puanlar (${fScore} - ${mScore}) eşit bitti! Birbirinize aynı anda en sevdiğiniz 3 özelliğinizi söyleyin!`;
+    }
+
+    eventCard.className = 'mine-event-card event-winner';
+    document.getElementById('mineEventTitle').textContent = `🏆 DÜELLO TAMAMLANDI! ${winnerText}`;
+    document.getElementById('mineEventDesc').textContent = winnerDesc;
+  }
+}
+
+function updateMineUI() {
+  const femaleName = getFemaleName();
+  const maleName = getMaleName();
+
+  // Update Player Names
+  const fNameEl = document.getElementById('mineNameFemale');
+  const mNameEl = document.getElementById('mineNameMale');
+  if (fNameEl) fNameEl.textContent = femaleName;
+  if (mNameEl) mNameEl.textContent = maleName;
+
+  // Update Scores
+  document.getElementById('mineScoreFemale').textContent = mineStats.female.score;
+  document.getElementById('mineScoreMale').textContent = mineStats.male.score;
+
+  // Update Sub Stats
+  document.getElementById('mineHeartsFemale').textContent = mineStats.female.hearts;
+  document.getElementById('mineStarsFemale').textContent = mineStats.female.stars;
+  document.getElementById('mineBombsFemale').textContent = mineStats.female.bombs;
+
+  document.getElementById('mineHeartsMale').textContent = mineStats.male.hearts;
+  document.getElementById('mineStarsMale').textContent = mineStats.male.stars;
+  document.getElementById('mineBombsMale').textContent = mineStats.male.bombs;
+
+  // Update Turn Active Cards
+  document.getElementById('mineCardFemale').classList.toggle('turn-active', mineTurn === 'female');
+  document.getElementById('mineCardMale').classList.toggle('turn-active', mineTurn === 'male');
+
+  // Update Starter Mini Buttons
+  document.getElementById('mineStarterFemaleBtn').classList.toggle('active', mineTurn === 'female');
+  document.getElementById('mineStarterMaleBtn').classList.toggle('active', mineTurn === 'male');
+
+  // Update Counts
+  document.getElementById('mineHeartCount').textContent = mineHeartsLeft;
+  document.getElementById('mineStarCount').textContent = mineStarsLeft;
+  document.getElementById('mineBombCount').textContent = mineBombsLeft;
+  
+  const remainingClickable = mineCells.filter(c => !c.classList.contains('revealed')).length;
+  const remEl = document.getElementById('mineRemainingCount');
+  if (remEl) remEl.textContent = remainingClickable;
+
+  document.getElementById('mineCurrentTurnText').textContent = (mineTurn === 'female') ? `👩 ${femaleName}` : `🧑 ${maleName}`;
+}
+
+// ==========================================
+// 5. GAME 2: ÇİFT TELEPATİSİ (25 SORU)
+// ==========================================
+const TELEPATHY_QUESTIONS = [
+  {
+    q: 'İlk yüz yüze buluştuğumuzda yapacağımız ilk şey ne olmalı?',
+    opts: ['Sımsıkı ve uzun uzun sarılmak', 'Güzel bir restoranda baş başa yemek', 'Kahve alıp sahilde yürümek', 'Hemen sinemaya veya otele kaçmak']
+  },
+  {
+    q: 'İkimiz için en ideal tatil tarzı hangisi?',
+    opts: ['Doğa içinde şömineli ahşap dağ evi', 'Her şey dahil lüks deniz kenarı oteli', 'Bilinmeyen bir şehri keşfetme turu', 'Evde kalıp tüm hafta sonu baş başa olmak']
+  },
+  {
+    q: 'Bende seni en çok etkileyen özelliğim ne?',
+    opts: ['Gülüşüm ve enerjim', 'Ses tonum ve konuşma tarzım', 'Zekam ve anlayışım', 'Gözlerim ve bakışlarım']
+  },
+  {
+    q: 'Birlikte film izlerken hangi atıştırmalık vazgeçilmez?',
+    opts: ['Tuzlu patlamış mısır', 'Çikolata ve dondurma', 'Cips ve soslar', 'Meyve tabağı']
+  },
+  {
+    q: 'Birbirimize en çok ne zaman ihtiyaç duyarız?',
+    opts: ['Yorucu ve stresli bir günün sonunda', 'Çok mutlu bir haberi ilk paylaşırken', 'Gece uyumadan hemen önce', 'Her an her saniye!']
+  },
+  {
+    q: 'Birlikte yapmayı en çok hayal ettiğin aktivite hangisi?',
+    opts: ['Sabaha kadar arabayla müzik dinleyerek turlamak', 'Birlikte mutfağa girip yemek pişirmek', 'Konserde en sevdiğimiz şarkıda sarılıp dans etmek', 'Kışın karlar altında sıcak kahve içmek']
+  },
+  {
+    q: 'Partnerinin sana yapacağı en tatlı sürpriz ne olurdu?',
+    opts: ['Kapıya aniden en sevdiğin tatlı ve çiçekle gelmesi', 'Birlikte fotoğraflarınızdan özel bir albüm hazırlaması', 'Hafta sonu için gizli bir gezi planlaması', 'Sana özel içten bir mektup yazması']
+  },
+  {
+    q: 'İlişkimizin en güçlü yönü sence ne?',
+    opts: ['Saatlerce konuşsak bile sıkılmamamız', 'Birbirimize duyduğumuz derin güven', 'Göz göze geldiğimizde her şeyi anlamamız', 'Aramızdaki dinmeyen heyecan ve çekim']
+  },
+  {
+    q: 'Pazar sabahı için en mükemmel uyanış hangisi?',
+    opts: ['Yatakta sıcak kahve ve öpücüklerle uyanmak', 'Öğlene kadar sarılıp uyumaya devam etmek', 'Birlikte neşeli müzik eşliğinde kahvaltı hazırlamak', 'Hemen hazırlanıp deniz kenarında brunch yapmaya gitmek']
+  },
+  {
+    q: 'Birlikte izleyeceğimiz en keyifli film/dizi türü hangisi?',
+    opts: ['Kahkahalara boğan romantik komedi', 'Nefes kesen gizem ve gerilim', 'Duygusal ve göz dolduran aşk filmi', 'Tüm gece süren sürükleyici mini dizi']
+  },
+  {
+    q: 'Partnerinde ilk gördüğünde kalbini en çok çarptıran detay neydi?',
+    opts: ['Gözlerinin ışıltısı ve bakışı', 'İçten ve sıcacık gülümsemesi', 'Giyim tarzı ve yaydığı koku', 'Kendinden emin duruşu ve enerjisi']
+  },
+  {
+    q: 'Moralin çok bozukken partnerin seni nasıl neşelendirir?',
+    opts: ['Sımsıkı sarılıp sessizce yanında olarak', 'Sevdiğim abur cuburları alıp komiklikler yaparak', 'Beni dinleyip bana ne kadar değerli olduğumu hatırlatarak', 'Beni dışarı çıkarıp kafamı dağıtarak']
+  },
+  {
+    q: 'Birlikte bir şarkı seçecek olsaydık bu şarkının teması ne olurdu?',
+    opts: ['Nostaljik ve yavaş bir aşk baladı', 'Neşeli ve kıpır kıpır bir pop şarkısı', 'Derin sözleri olan akustik gitar şarkısı', 'Gece yolculuklarında dinlenen dinlendirici indie']
+  },
+  {
+    q: 'Partnerinin sana hediye alacağı en anlamlı şey ne olurdu?',
+    opts: ['Birlikte kullanacağımız çift aksesuarı (kolye/bileklik)', 'Uzun süredir hayalini kurduğum özel bir eşya', 'İkimizin anılarını biriktirdiğimiz el yapımı hatıra', 'Birlikte gideceğimiz tatil veya konser bileti']
+  },
+  {
+    q: 'Evde baş başa kaldığımızda zaman en çok nasıl geçer?',
+    opts: ['Gülüşmeler ve tatlı şakalaşmalarla', 'Film izlerken kucakta sokularak', 'Gelecek hayalleri kurup derin sohbetlerle', 'Müzik açıp çılgınca dans ederek']
+  },
+  {
+    q: 'Partnerinin hangi huyuna karşı asla koyamazsın?',
+    opts: ['Çocuk gibi tatlı tatlı naz yapmasına', 'Kulağıma fısıldayarak şefkat göstermesine', 'Gözlerini kısıp çapkınca gülümsemesine', 'Beni koruyup sahiplenici davranmasına']
+  },
+  {
+    q: 'İkimiz bir yolculuğa çıksak en çok kim neyi yapar?',
+    opts: ['Müzik listesini Sabri yapar, Meryem yolu izler', 'Rotayı Meryem belirler, Sabri arabayı sürer', 'İkimiz de plansız akışına bırakırız', 'Sürekli durup yol üstü lezzetleri deneriz']
+  },
+  {
+    q: 'İlk buluşmada en unutulmaz an hangisi olurdu?',
+    opts: ['İlk el ele tutuştuğumuz saniyeler', 'Göz göze gelip ikimizin de sustuğu o elektrikli an', 'İlk defa beraber kahkaha attığımız an', 'Ayrılırken sarıldığımız o vedalaşamama anı']
+  },
+  {
+    q: 'Romantik bir akşam yemeğinde ortam nasıl olmalı?',
+    opts: ['Loş ışıkta, mumlar ve sakin piyano müziği eşliğinde', 'Şık bir gökdelen terasında şehir manzarasıyla', 'Kumsalda dalga sesleri ve yıldızlar altında', 'Evde şömine veya loş abajur eşliğinde samimi bir masa']
+  },
+  {
+    q: 'Partnerinin sana söyleyeceği en etkileyici cümle hangisi olurdu?',
+    opts: ['"Seninleyken kendimi dünyanın en huzurlu insanı hissediyorum"', '"Gözlerinin içine her baktığımda ilk günkü gibi aşık oluyorum"', '"İyi ki varsın, hayatıma kattığın güzellik tarif edilemez"', '"Sen benim hem en iyi arkadaşım hem de en büyük aşkımsın"']
+  },
+  {
+    q: 'Birbirimize vereceğimiz en tatlı hitap şekli hangisi?',
+    opts: ['Aşkım / Birtanem', 'Güzelim / Hayatım', 'Her şeyim / Ruh eşim', 'Dünyam / Bebeğim']
+  },
+  {
+    q: 'Birlikte fotoğraf çekilirken en favori pozumuz hangisi olurdu?',
+    opts: ['Arkadan sarılıp yanağa öpücük kondurma', 'Kameraya çılgınca komik surat yapma', 'Alın alına verip gözleri kapatma', 'El ele tutuşup doğal gülümseme']
+  },
+  {
+    q: 'Partnerinle birlikte yeni bir hobi edinecek olsanız hangisi olurdu?',
+    opts: ['Birlikte salsa / tango dans kursuna gitmek', 'Birlikte spor veya fitness yapmak', 'Birlikte resim / seramik atölyesine katılmak', 'Birlikte kamp yapıp doğada çadır kurmak']
+  },
+  {
+    q: 'Gece yarısı saat 03:00’te aniden uyansanız ne yaparsınız?',
+    opts: ['Birbirimize daha sıkı sarılıp uyumaya devam ederiz', 'Mutfağa inip gizlice gece atıştırmalığı yeriz', 'Yatakta fısıltıyla sohbet edip hayaller kurarız', 'Balkona çıkıp serin havada yıldızları izleriz']
+  },
+  {
+    q: 'Bizim ilişkimizi en iyi anlatan kelime hangisi?',
+    opts: ['Tutku', 'Huzur', 'Eğlence', 'Bağlılık']
+  }
+];
+let telepathyIndex = 0;
+
+function loadTelepathyQuestion() {
+  const item = TELEPATHY_QUESTIONS[telepathyIndex % TELEPATHY_QUESTIONS.length];
+  document.getElementById('quizQNum').textContent = `SORU ${(telepathyIndex % TELEPATHY_QUESTIONS.length) + 1} / ${TELEPATHY_QUESTIONS.length}`;
+  document.getElementById('quizQTitle').textContent = item.q;
+  const grid = document.getElementById('quizOptsGrid');
+  grid.innerHTML = item.opts.map((opt, i) => `
+    <button class="quiz-opt-btn" onclick="selectTelepathyOpt(this, ${i})">${opt}</button>
+  `).join('');
+}
+
+function selectTelepathyOpt(btn, idx) {
+  playClickSound();
+  document.querySelectorAll('.quiz-opt-btn').forEach(b => b.classList.remove('chosen'));
+  btn.classList.add('chosen');
+  showToast('Seçiminiz yapıldı! 1-2-3 deyip aynı anda söyleyin!');
+}
+
+function nextTelepathyQuestion() {
+  playClickSound();
+  telepathyIndex++;
+  loadTelepathyQuestion();
+}
+
+// ==========================================
+// 6. GAME 3: HANGİSİNİ TERCİH EDERDİN? (25 KADEMELİ SEÇENEK)
+// ==========================================
+const WYR_LEVELS = [
+  // SEVİYE 1: TATLI & EĞLENCELİ (1-5)
+  {
+    level: 'SEVİYE 1: TATLI & EĞLENCELİ (1/25)',
+    a: 'Partnerinin senin için yatakta özel kahvaltı hazırlaması',
+    b: 'Partnerinin sana yorucu bir günün sonunda masaj yapması'
+  },
+  {
+    level: 'SEVİYE 1: TATLI & EĞLENCELİ (2/25)',
+    a: 'Bütün gün evde battaniye altında sarılıp dizi ve pizza keyfi',
+    b: 'Şık ve romantik bir akşam yemeğine çıkıp gece sahilde yürümek'
+  },
+  {
+    level: 'SEVİYE 1: TATLI & EĞLENCELİ (3/25)',
+    a: 'Birlikte lunaparkta çılgınca eğlenip pamuk şeker yemek',
+    b: 'Sakin bir göl kenarında baş başa piknik yapıp sohbet etmek'
+  },
+  {
+    level: 'SEVİYE 1: TATLI & EĞLENCELİ (4/25)',
+    a: 'Partnerinin seni her sabah yanağından öperek uyandırması',
+    b: 'Partnerinin seni her gece kollarında sımsıkı sararak uyutması'
+  },
+  {
+    level: 'SEVİYE 1: TATLI & EĞLENCELİ (5/25)',
+    a: 'Birlikte kahkahalara boğulduğunuz neşeli bir komedi filmi izlemek',
+    b: 'Birlikte korku filmi izleyip birbirinize sığınarak sarılmak'
+  },
+
+  // SEVİYE 2: ROMANTİK & DERİN BAĞ (6-10)
+  {
+    level: 'SEVİYE 2: ROMANTİK & DERİN BAĞ (6/25)',
+    a: 'Yağmur altında sırılsıklam olup müziksiz sarılarak dans etmek',
+    b: 'Şömine başında battaniye altında sessizce yıldızları izlemek'
+  },
+  {
+    level: 'SEVİYE 2: ROMANTİK & DERİN BAĞ (7/25)',
+    a: 'Birbirinize en gizli sırlarınızı anlattığınız sabaha kadar süren gece',
+    b: 'Hiç konuşmadan sadece göz temasıyla geçen derin romantik saatler'
+  },
+  {
+    level: 'SEVİYE 2: ROMANTİK & DERİN BAĞ (8/25)',
+    a: 'Birlikte romantik bir Paris veya Roma gezisine plansız kaçmak',
+    b: 'Issız tropik bir adada baş başa lüks bir bungalovda 1 hafta kalmak'
+  },
+  {
+    level: 'SEVİYE 2: ROMANTİK & DERİN BAĞ (9/25)',
+    a: 'Partnerinin sana el yazısıyla yazdığı duygu dolu uzun bir aşk mektubu',
+    b: 'Partnerinin senin için özel sözler yazıp söylediği akustik bir şarkı'
+  },
+  {
+    level: 'SEVİYE 2: ROMANTİK & DERİN BAĞ (10/25)',
+    a: 'Mum ışığında birlikte yemek pişirip mutfakta sarılarak dans etmek',
+    b: 'Gece yarısı arabayla bomboş yollarda favori şarkılarınızla turlamak'
+  },
+
+  // SEVİYE 3: ÇEKİCİ FLÖRT & HEYECAN (11-15)
+  {
+    level: 'SEVİYE 3: ÇEKİCİ FLÖRT & HEYECAN (11/25)',
+    a: 'Kamerada 15 saniye boyunca birbirinize kışkırtıcı bakışlar atmak',
+    b: 'Mikrofonda en seksi fısıltılı ses tonunuzla birbirinize iltifat etmek'
+  },
+  {
+    level: 'SEVİYE 3: ÇEKİCİ FLÖRT & HEYECAN (12/25)',
+    a: 'Partnerinin boynuna hafif ve ıslak öpücükler kondurması',
+    b: 'Partnerinin parmaklarını saçlarında ve sırtında gezdirmesi'
+  },
+  {
+    level: 'SEVİYE 3: ÇEKİCİ FLÖRT & HEYECAN (13/25)',
+    a: 'Birlikte köpüklü jakuzide mum ışığı eşliğinde baş başa dinlenmek',
+    b: 'Loş ışıkta ve kokulu yağlar eşliğinde birbirinize vücut masajı yapmak'
+  },
+  {
+    level: 'SEVİYE 3: ÇEKİCİ FLÖRT & HEYECAN (14/25)',
+    a: 'Partnerinin kulağına bu geceki en gizli arzusunu fısıldaması',
+    b: 'Partnerinin sana "gözlerini kapat ve sadece bekle" demesi'
+  },
+  {
+    level: 'SEVİYE 3: ÇEKİCİ FLÖRT & HEYECAN (15/25)',
+    a: 'Sabah uyanır uyanmaz yatakta sıcak ve ten tene sarılmak',
+    b: 'Gece yatmadan önce kapının arkasında tutkulu derin bir öpüşme'
+  },
+
+  // SEVİYE 4: ATEŞLİ & TUTKULU DOKUNUŞLAR (16-20)
+  {
+    level: 'SEVİYE 4: ATEŞLİ & TUTKULU DOKUNUŞLAR (16/25)',
+    a: 'İlk buluşmada nefes kesen, derin ve dudakları ısıran bir öpüşme',
+    b: 'Tüm gece süren sıcak bir masaj ve baş başa yatakta yakınlaşma'
+  },
+  {
+    level: 'SEVİYE 4: ATEŞLİ & TUTKULU DOKUNUŞLAR (17/25)',
+    a: 'Partnerinin seni duvara yaslayıp tutku ve arzuyla öpmesi',
+    b: 'Partnerinin seni kucağına alıp yatağa taşıyarak üzerini örtmesi'
+  },
+  {
+    level: 'SEVİYE 4: ATEŞLİ & TUTKULU DOKUNUŞLAR (18/25)',
+    a: 'Loş ışıkta ipek çamaşırlarla partnerini baştan çıkarmak',
+    b: 'Gözleri bağlıyken partnerinin tüm vücudundaki dokunuşlarını hissetmek'
+  },
+  {
+    level: 'SEVİYE 4: ATEŞLİ & TUTKULU DOKUNUŞLAR (19/25)',
+    a: 'Banyoda sıcak suyun altında nefes nefese tutkulu yakınlaşma',
+    b: 'Yatakta sabaha kadar süren ipeksi ve kesintisiz ten teması'
+  },
+  {
+    level: 'SEVİYE 4: ATEŞLİ & TUTKULU DOKUNUŞLAR (20/25)',
+    a: 'Partnerinin boynunu ve dudaklarını hafifçe ısırarak öpmesi',
+    b: 'Partnerinin baştan aşağıya tüm vücudunu öpücüklerle keşfetmesi'
+  },
+
+  // SEVİYE 5: +18 GECE ZİRVESİ & FANTEZİLER (21-25)
+  {
+    level: 'SEVİYE 5: +18 GECE ZİRVESİ & FANTEZİLER (21/25)',
+    a: 'Partnerinin üzerinde tamamen kontrol ve hakimiyet sahibi olmak',
+    b: 'Kendini tamamen partnerinin ellerine ve ateşli arzusuna teslim etmek'
+  },
+  {
+    level: 'SEVİYE 5: +18 GECE ZİRVESİ & FANTEZİLER (22/25)',
+    a: 'Gece yarısı aniden alevlenen çılgın ve hızlı bir tutku seansı',
+    b: 'Saatlerce süren yavaş, şehvetli, mum ışığında derin bir sevişme'
+  },
+  {
+    level: 'SEVİYE 5: +18 GECE ZİRVESİ & FANTEZİLER (23/25)',
+    a: 'Büyük bir aynanın karşısında partnerinle göz göze kalarak yakınlaşmak',
+    b: 'Karanlıkta sadece nefes ve dokunuşlarla sınırları tamamen kaldırmak'
+  },
+  {
+    level: 'SEVİYE 5: +18 GECE ZİRVESİ & FANTEZİLER (24/25)',
+    a: 'Partnerinin kulağına en cüretkar fantezilerini fısıldayıp izin istemesi',
+    b: 'O fantezileri hiçbir şey konuşmadan o anda alev alev hayata geçirmek'
+  },
+  {
+    level: 'SEVİYE 5: +18 GECE ZİRVESİ & FANTEZİLER (25/25)',
+    a: 'Sabaha kadar hiç durmadan birbirinizin teninde kaybolmak',
+    b: 'Tüm gün yataktan çıkmayıp sadece sarılmak, öpüşmek ve uyumak'
+  }
+];
+let wyrIndex = 0;
+
+function initWyrGame() {
+  const pair = WYR_LEVELS[wyrIndex % WYR_LEVELS.length];
+  document.getElementById('wyrLevelTag').textContent = pair.level;
+  document.getElementById('wyrTextA').textContent = pair.a;
+  document.getElementById('wyrTextB').textContent = pair.b;
+  document.getElementById('wyrCardA').classList.remove('selected');
+  document.getElementById('wyrCardB').classList.remove('selected');
+}
+
+function drawNextWyr() {
+  playClickSound();
+  wyrIndex = (wyrIndex + 1) % WYR_LEVELS.length;
+  initWyrGame();
+  showToast('Yeni ikilem geldi! 3-2-1 deyip aynı anda seçin!');
+}
+
+function selectWyr(choice) {
+  playClickSound();
+  document.getElementById('wyrCardA').classList.toggle('selected', choice === 'A');
+  document.getElementById('wyrCardB').classList.toggle('selected', choice === 'B');
+  showToast(`Seçiminiz: Seçenek ${choice}! Bakalım partneriniz neyi seçti?`);
+}
+
+// ==========================================
+// 7. EFFECTS & PARTICLES
+// ==========================================
+function createFloatingParticles() {
+  const container = document.getElementById('particleContainer');
+  const symbols = ['✨', '💖', '🌸', '⭐', '☕', '🍷', '🎀', '💣'];
+  for (let i = 0; i < 20; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.animationDuration = (8 + Math.random() * 12) + 's';
+    p.style.animationDelay = (Math.random() * 8) + 's';
+    p.style.fontSize = (0.8 + Math.random() * 1.1) + 'rem';
+    container.appendChild(p);
+  }
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2600);
+}
+
+function launchConfetti() {
+  const canvas = document.getElementById('confettiCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const pieces = [];
+  const colors = ['#ff3b7e', '#9b51e0', '#ffbe3b', '#00c2ff', '#00e676', '#fff'];
+  for (let i = 0; i < 80; i++) {
+    pieces.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      size: Math.random() * 8 + 4,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      speed: Math.random() * 5 + 2,
+      angle: Math.random() * 360,
+      spin: Math.random() * 6 - 3
+    });
+  }
+
+  function update() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let active = false;
+    pieces.forEach(p => {
+      p.y += p.speed;
+      p.angle += p.spin;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate((p.angle * Math.PI) / 180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+      ctx.restore();
+      if (p.y < canvas.height) active = true;
+    });
+    if (active) requestAnimationFrame(update);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  update();
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  createFloatingParticles();
+  initMinesGame();
+  loadTelepathyQuestion();
+  initWyrGame();
+});
+</script>
+</body>
+</html>
